@@ -3,10 +3,9 @@ import PyPDF2
 class PdfClass :
     '''
     This class handles the text of a pdf and extracts conclusions
+    Variable _conclusion is static.
+    It keeps the search results from all files
     '''
-
-    _conclusion = {}    # Will be in the form {contract: _phrasesToSearch}
-
 
     def __init__(self, fn) :
         self._pdfFileName = fn      # Name of the pdf file
@@ -20,17 +19,17 @@ class PdfClass :
                                 "ΚΑΤΑ ΤΗΝ ΔΙΑΡΚΕΙΑ ΕΡΓΑΣΙΩΝ": [],
                                 "ΖΗΜΙΕΣ ΚΛΕΠΤΗ ΣΤΟ ΚΤΙΡΙΟ": [],
                                 "ΑΞΙΑ ΚΑΙΝΟΥΡΓΙΟΥ": []}
+        self._conclusion = {}    # Will be in the form {contract: _phrasesToSearch}
 
-        self._run()
 
-    def _run(self):
+    def run(self):
         '''
         The logic of the project for a specific pdf file
         '''
         self._readPdfExtractText()
         self._searchForPhrases()
         self._fillCoclusion()
-
+        return self._conclusion
 
 
     def _readPdfExtractText(self):
@@ -57,24 +56,25 @@ class PdfClass :
         Saves the reasult in the _phrasesForSearch dict.
         '''
         for key in self._phrasesToSearch :
-            for idp, page in enumerate(self._text[:5]) :
+            for idp, page in enumerate(self._text) :
                 for idr, row in enumerate(page) :
                     if row.find(key) >= 0:
                         self._phrasesToSearch[key].append(f"{idr}/{idp}-->{row}")
-                        # print(f"{idr}/{idp}-->{row}")
-        # print(self._phrasesToSearch)
 
 
     def _fillCoclusion(self):
         def _getContractNum() :
             for r in self._text[0]:
                 if r.find("ΑΡΙΘΜΟΣ ΑΣΦΑΛΙΣΤΗΡΙΟΥ") >= 0 :
-                    pv = r.split(' ')[3]
-                    return (pv.split('/')[0], pv.split('/')[1])
+                    pv = r.split('/')
+                    p = pv[0].split(" ")[-1]
+                    v = pv[1].split(" ")[0]
+                    return (p, v)
         
-        (c, v) = _getContractNum()
-        self._conclusion[c] = {"Version": v, "Justification": self._phrasesToSearch}
-        
+        (p, v) = _getContractNum()
+        self._conclusion["Vertran"] = p
+        self._conclusion["Version"] = v
+        self._conclusion["Justification"] = self._phrasesToSearch
     
 
     def getNumOfPages(self):

@@ -1,30 +1,15 @@
 # Install PyPDF2  - pip install PyPDF2
 
 import os
-from PdfClass import PdfClass
+from SpecialConditionsClass import SpecialConditionsClass
 
 if __name__ == "__main__":
-    # Read pdf file name
-    # As a start the file name is imported directy to a variable
-    # fn = "2045883137-14.pdf"
-    # contract = PdfClass(fn)
 
-    # Define the relative folder path
+    # Define the relative folder path where the pdf files are
     relative_folder_path = './pdfFiles'
 
-    # Iterate through the folder
-    for file_name in os.listdir(relative_folder_path):
-        file_path = os.path.join(relative_folder_path, file_name)
-        
-        # Check if it's a file (not a directory)
-        if os.path.isfile(file_path):
-            print(file_name)
-            contract = PdfClass(file_path)
-            
-    print(PdfClass._conclusion)
-
-
-
-
-  
+    # Create a list with Special Conditions of ALL Contracts-Files
+    project = SpecialConditionsClass(relative_folder_path)
+    project.extractToFile("SpecialConditions.csv")
+    # project.printAllSC()
 
