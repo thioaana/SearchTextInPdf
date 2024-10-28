@@ -16,17 +16,24 @@ def readBlockAndCreateSibgleContractPdfs():
         if os.path.isfile(file_path):
             SplitBlockPdf(file_path, pdfsPath)
 
-if __name__ == "__main__":
-    # Read the pdfs with multiple contracts
-    # Create single contract pdfs.
-    # readBlockAndCreateSibgleContractPdfs()
 
-
+def readPdfsAndExtractCsv():
     # Define the relative folder path where the pdf files are
     relative_folder_path = './SingleContractPdfs'
 
     # Create a list with Special Conditions of ALL Contracts-Files
     project = SpecialConditionsClass(relative_folder_path)
-    project.extractToFile("SpecialConditions.csv")
+    # project.extractToFile("SpecialConditions.csv")
+    project.extractContractsWithCover("OnyContractsWithCover.csv")
+
+
+if __name__ == "__main__":
+    # Read the pdfs with multiple contracts
+    # Create single contract pdfs.
+    # readBlockAndCreateSibgleContractPdfs()
+
+    # Read pdf files and extract csv with the results
+    readPdfsAndExtractCsv()
+
 
 
